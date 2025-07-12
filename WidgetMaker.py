@@ -106,9 +106,9 @@ def handle_deselection(option_num):
 def handle_option_selection(option_num):
     """Handle selection of a predefined option"""
     # Clear any custom selection
-    st.session_state.form['custom_topic'] = ''
-    st.session_state.custom_topic_input = ''
-    st.session_state.form['is_custom_selected'] = False
+    ##st.session_state.form['custom_topic'] = ''
+    ##st.session_state.custom_topic_input = ''
+    ##st.session_state.form['is_custom_selected'] = False
     
     # Update counts for previous selection if exists
     if st.session_state.form['selected_option'] is not None:

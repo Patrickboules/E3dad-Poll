@@ -281,9 +281,6 @@ st.markdown("""
 
 st.title("📊 مشاريع اعداد 2025")
 
-# Initialize session state with clearer structure
-initialize_session_state()
-
 # Validate Egyptian phone number
 def validate_egyptian_phone(phone):
     # Remove any non-digit characters
