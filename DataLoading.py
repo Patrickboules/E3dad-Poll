@@ -19,7 +19,6 @@ def initialize_session_state():
             'temp_counts': {},
             'user_selections': {}
         }
-initialize_session_state()
 
 options = {
     1: ("مسئول توزيع الفرق والغرف (Logistics)", 5),
