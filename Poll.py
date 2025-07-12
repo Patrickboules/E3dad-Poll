@@ -282,21 +282,6 @@ st.markdown("""
 st.title("📊 مشاريع اعداد 2025")
 
 # Initialize session state with clearer structure
-def initialize_session_state():
-    if 'form' not in st.session_state:
-        st.session_state.form = {
-            'phone_verified': False,
-            'phone_number': '',
-            'selected_option': None,
-            'custom_topic': '',
-            'is_custom_selected': False,
-            'first_name': '',
-            'last_name': '',
-            'submitted': False,
-            'temp_counts': {},
-            'user_selections': {}
-        }
-
 initialize_session_state()
 
 # Validate Egyptian phone number
@@ -538,21 +523,12 @@ def main_form():
 
 </div>
 """, unsafe_allow_html=True)
-            col1, col2 = st.columns(2)
-            with col1:
-                st.markdown('<span class="required-field">اسم المخدوم رقم 1</span>', unsafe_allow_html=True)
-                st.session_state.form['first_name'] = st.text_input(
+            
+            st.markdown('<span class="required-field">اسم المخدوم رقم 1</span>', unsafe_allow_html=True)
+            st.session_state.form['first_name'] = st.text_input(
                             "اسم المخدوم رقم 1", 
                             value=st.session_state.form['first_name'],
                             key="first_name_input",
-                            label_visibility="collapsed",
-                        )
-            with col2:
-                st.markdown("اسم المخدوم رقم 2")
-                st.session_state.form['last_name'] = st.text_input(
-                        "اسم المخدوم رقم 2", 
-                            value=st.session_state.form['last_name'],
-                            key="last_name_input",
                             label_visibility="collapsed",
                         )
             
@@ -570,10 +546,8 @@ def main_form():
             html(option_click_js(), height=0)
             st.markdown("---")
 
-            create_custom_topic_input()
-                    
-                    # Handle form submission
-                    # Check if a valid selection exists
+            ##create_custom_topic_input() can be used if needed 
+
             has_valid_selection = (
                         st.session_state.form['selected_option'] is not None or
                         (st.session_state.form['is_custom_selected'] and 

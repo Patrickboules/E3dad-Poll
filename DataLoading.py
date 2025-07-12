@@ -6,6 +6,20 @@ from github import Github
 REPO_NAME = "Patrickboules/E3dad-Poll"
 FILE_PATH = "responses.json"
 
+def initialize_session_state():
+    if 'form' not in st.session_state:
+        st.session_state.form = {
+            'phone_verified': False,
+            'phone_number': '',
+            'selected_option': None,
+            'custom_topic': '',
+            'is_custom_selected': False,
+            'first_name': '',
+            'submitted': False,
+            'temp_counts': {},
+            'user_selections': {}
+        }
+        
 options = {
     1: ("مسئول توزيع الفرق والغرف (Logistics)", 5),
     2: ("مسئول بريد السما (Multimedia)", 3),
@@ -35,7 +49,6 @@ def load_responses():
 def save_response():
     response_data = {
         "First Name": st.session_state.form['first_name'],
-        "Last Name": st.session_state.form['last_name'],
         "Topic": options[st.session_state.form['selected_option']] if st.session_state.form['selected_option'] else st.session_state.form['custom_topic']
     }
     
@@ -54,7 +67,6 @@ def save_response():
                 if phone:
                     new_data[phone] = {
                         "First Name": entry.get("First Name", ""),
-                        "Last Name": entry.get("Last Name", ""),
                         "Topic": entry.get("Topic", "")
                     }
             existing_data = new_data
