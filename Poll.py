@@ -547,14 +547,8 @@ def main_form():
 
             ##create_custom_topic_input() can be used if needed 
 
-            has_valid_selection = (
-                        st.session_state.form['selected_option'] is not None or
-                        (st.session_state.form['is_custom_selected'] and 
-                        st.session_state.form.get('custom_topic', '').strip())
-                    )
-
-                    # Check if first_name is empty
-                    # 
+            has_valid_selection = st.session_state.form['selected_option'] is not None
+                      
             is_first_name_empty = not st.session_state.form.get('first_name', '').strip()
 
                     # Determine if the submit button should be disabled
