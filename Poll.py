@@ -1,6 +1,4 @@
-from DataLoading import *
 from WidgetMaker import *
-import re
 import time
 
 # Configure page - disable dark mode
@@ -281,45 +279,9 @@ st.markdown("""
 
 st.title("📊 مشاريع اعداد 2025")
 
+# Initialize session state with clearer structure
+
 initialize_session_state()
-
-# Validate Egyptian phone number
-def validate_egyptian_phone(phone):
-    # Remove any non-digit characters
-    phone = re.sub(r'\D', '', phone)
-    # Check if it's a valid Egyptian mobile number (starts with 01 and has 11 digits)
-    if len(phone) == 11 and phone.startswith('01'):
-        return phone
-    return None
-
-def option_click_js():
-    return """
-    <script>
-    function handleClick(optionNum) {
-        const buttons = parent.document.querySelectorAll('button[title="اختر"]');
-        buttons.forEach(button => {
-            if (button.textContent.includes("اختر") && 
-                button.getAttribute("data-testid").includes(optionNum)) {
-                button.click();
-            }
-        });
-    }
-
-    function enforceLightMode() {
-        document.documentElement.style.backgroundColor = '#ffffff';
-        document.documentElement.style.colorScheme = 'light';
-        document.body.style.backgroundColor = '#ffffff';
-        document.body.classList.remove('dark');
-
-        const darkModeToggle = document.querySelector('[data-testid="stToolbar"]');
-        if (darkModeToggle) darkModeToggle.style.display = 'none';
-    }
-
-    // Initial call and interval check
-    window.addEventListener('load', enforceLightMode);
-    setInterval(enforceLightMode, 500);
-    </script>
-    """
 
 def phone_verification_page():
     with st.container():
@@ -493,6 +455,8 @@ def phone_verification_page():
                 </div>
                 """, unsafe_allow_html=True)
 
+
+
 def main_form():
     if st.session_state.form['submitted'] == True:
             show_confirmation_page()
@@ -522,7 +486,6 @@ def main_form():
 
 </div>
 """, unsafe_allow_html=True)
-            
             st.markdown('<span class="required-field">اسم المخدوم رقم 1</span>', unsafe_allow_html=True)
             st.session_state.form['first_name'] = st.text_input(
                             "اسم المخدوم رقم 1", 
@@ -530,7 +493,6 @@ def main_form():
                             key="first_name_input",
                             label_visibility="collapsed",
                         )
-            
             st.markdown("---")
             
             existing_data = load_responses()  # @st.cache_data(ttl=1) ensures freshness
@@ -539,16 +501,25 @@ def main_form():
                     # Display topic selection options
             st.markdown('<h2 class="header">الرجاء اختيار موضوع واحد من المواضيع التالية:</h2>', unsafe_allow_html=True)
                     
-            for num, (text,limit) in options.items():
-                create_option(num, text, user_selections,limit)
+            for num, data in options.items():
+                create_option(num, data , user_selections)
                     
             html(option_click_js(), height=0)
             st.markdown("---")
 
-            ##create_custom_topic_input() can be used if needed 
+            #create_custom_topic_input()
+                    
+                    # Handle form submission
+                    # Check if a valid selection exists
+            has_valid_selection = (
+                        st.session_state.form['selected_option'] is not None 
+                        ##or
+                        ##(st.session_state.form['is_custom_selected'] and 
+                        ##st.session_state.form.get('custom_topic', '').strip())
+                    )
 
-            has_valid_selection = st.session_state.form['selected_option'] is not None
-                      
+                    # Check if first_name is empty
+                    # 
             is_first_name_empty = not st.session_state.form.get('first_name', '').strip()
 
                     # Determine if the submit button should be disabled

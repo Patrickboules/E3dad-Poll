@@ -1,32 +1,4 @@
 from DataLoading import *
-
-def create_custom_topic_input():
-    selected = (st.session_state.form['is_custom_selected'] and 
-               st.session_state.form['custom_topic'].strip())
-    
-    container_class = "custom-topic-container"
-    if selected:
-        container_class += " custom-topic-selected"
-    
-    st.markdown(f'<div class="{container_class}">', unsafe_allow_html=True)
-    st.markdown("<h2 class='header'> أو اكتب موضوعًا مخصصًا من عندك: </h2>", unsafe_allow_html=True)
-    
-    col1, col2 = st.columns([4, 1])
-    with col1:
-        st.text_input(
-            "موضوع مخصص",
-            value=st.session_state.form['custom_topic'],
-            key="custom_topic_input",
-            label_visibility="collapsed",
-            placeholder="اكتب موضوعًا مخصصًا إذا لم تجد ما تبحث عنه",
-        )
-    with col2:
-        if st.button("اختر", key="select_custom", use_container_width=True):
-            handle_custom_topic()
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-
 def handle_custom_topic():
     """Handle custom topic input and selection"""
     # Clear any predefined selection
@@ -41,20 +13,17 @@ def handle_custom_topic():
     st.session_state.form['is_custom_selected'] = bool(custom_text)
     save_response()
     st.rerun()
-
-def create_option(num, text, user_selections,limit):
+def create_option(num, data, user_selections):
+    text, max_limit = data  # Unpack the tuple
     combined_counts = get_combined_counts()
     count = combined_counts.get(num, 0)
-    max_limit = limit
     progress = (count / max_limit) * 100
     
-    # Check if user has already selected this topic (max 3 per phone)
     phone = st.session_state.form['phone_number']
     user_topics = user_selections.get(phone, [])
     user_topic_count = user_topics.count(num)
-    disabled = count >= max_limit or user_topic_count >= 3
+    disabled = count >= max_limit or user_topic_count >= max_limit
     
-    # Determine if this option is selected
     selected = (st.session_state.form['selected_option'] == num and 
                not st.session_state.form['is_custom_selected'])
     
@@ -106,9 +75,9 @@ def handle_deselection(option_num):
 def handle_option_selection(option_num):
     """Handle selection of a predefined option"""
     # Clear any custom selection
-    ##st.session_state.form['custom_topic'] = ''
-    ##st.session_state.custom_topic_input = ''
-    ##st.session_state.form['is_custom_selected'] = False
+    st.session_state.form['custom_topic'] = ''
+    st.session_state.custom_topic_input = ''
+    st.session_state.form['is_custom_selected'] = False
     
     # Update counts for previous selection if exists
     if st.session_state.form['selected_option'] is not None:
@@ -120,3 +89,69 @@ def handle_option_selection(option_num):
     st.session_state.form['temp_counts'][option_num] = st.session_state.form['temp_counts'].get(option_num, 0) + 1
     save_response()
     st.rerun()
+
+
+def create_custom_topic_input():
+    selected = (st.session_state.form['is_custom_selected'] and 
+               st.session_state.form['custom_topic'].strip())
+    
+    container_class = "custom-topic-container"
+    if selected:
+        container_class += " custom-topic-selected"
+    
+    st.markdown(f'<div class="{container_class}">', unsafe_allow_html=True)
+    st.markdown("<h2 class='header'> أو اكتب موضوعًا مخصصًا من عندك: </h2>", unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([4, 1])
+    with col1:
+        st.text_input(
+            "موضوع مخصص",
+            value=st.session_state.form['custom_topic'],
+            key="custom_topic_input",
+            label_visibility="collapsed",
+            placeholder="اكتب موضوعًا مخصصًا إذا لم تجد ما تبحث عنه",
+        )
+    with col2:
+        if st.button("اختر", key="select_custom", use_container_width=True):
+            handle_custom_topic()
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
+def option_click_js():
+    return """
+    <script>
+    function handleClick(optionNum) {
+        const buttons = parent.document.querySelectorAll('button[title="اختر"]');
+        buttons.forEach(button => {
+            if (button.textContent.includes("اختر") && 
+                button.getAttribute("data-testid").includes(optionNum)) {
+                button.click();
+            }
+        });
+    }
+
+    function enforceLightMode() {
+        document.documentElement.style.backgroundColor = '#ffffff';
+        document.documentElement.style.colorScheme = 'light';
+        document.body.style.backgroundColor = '#ffffff';
+        document.body.classList.remove('dark');
+
+        const darkModeToggle = document.querySelector('[data-testid="stToolbar"]');
+        if (darkModeToggle) darkModeToggle.style.display = 'none';
+    }
+
+    // Initial call and interval check
+    window.addEventListener('load', enforceLightMode);
+    setInterval(enforceLightMode, 500);
+    </script>
+    """
+
+def get_combined_counts():
+    existing_data = load_responses()
+    topic_counts, _ = process_responses(existing_data)
+    
+    # Combine with temporary selections
+    combined = topic_counts.copy()
+    for num, count in st.session_state.form['temp_counts'].items():
+        combined[num] += count
+    return combined
