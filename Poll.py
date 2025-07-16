@@ -274,10 +274,80 @@ st.markdown("""
     [data-testid="stDecoration"] {
         display: none !important;
     }
+            
+            .option-container {
+    border: 1px solid #ddd;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+.option-top-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.option-number {
+    font-weight: bold;
+}
+
+.option-text {
+    flex-grow: 1;
+}
+
+.option-middle-row {
+    display: flex;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 8px;
+    align-items: center;
+}
+
+.counts {
+    font-weight: 500;
+}
+
+.user-counts {
+    color: #2b7de9;
+}
+
+.leaders {
+    margin-left: auto;
+    font-style: italic;
+}
+
+.progress-container {
+    height: 6px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #4CAF50;
+    transition: width 0.3s ease;
+}
+
+.full-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #f44336;
+    color: white;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    border-radius: 10px;
+    font-weight: bold;
+}
 </style>
 """, unsafe_allow_html=True)
 
-st.title("📊E3dad Poll 2025")
+st.title("📊E3dad 2025")
 
 # Initialize session state with clearer structure
 
