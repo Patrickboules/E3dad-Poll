@@ -14,7 +14,7 @@ def handle_custom_topic():
     save_response()
     st.rerun()
 def create_option(num, data, user_selections):
-    text, max_limit = data  # Unpack the tuple
+    text, max_limit,leaders = data  # Unpack the tuple
     combined_counts = get_combined_counts()
     count = combined_counts.get(num, 0)
     progress = (count / max_limit) * 100
@@ -29,23 +29,23 @@ def create_option(num, data, user_selections):
     
     container = st.container()
     container.markdown(
-        f"""
-        <div class="option-container {'selected' if selected else ''} {'disabled' if disabled and not selected else ''}" 
-             id="option_{num}"
-             onclick="handleClick({num})">
-            <div class="option-header">
-                <div class="option-number">{num}.</div>
-                <div class="count-display">({count}/{max_limit}) - اختياراتك:</div>
-            </div>
-            <div class="option-text">{text}</div>
-            <div class="progress-container">
-                <div class="progress-bar {'complete' if count >= max_limit else ''}" style="width:{progress}%"></div>
-            </div>
+    f"""
+    <div class="option-container {'selected' if selected else ''} {'disabled' if disabled and not selected else ''}" 
+         onclick="handleClick({num})">
+        <div class="option-header">
+            <span class="option-number">{num}.</span>
+            <span class="counts">({count}/{max_limit})</span>
+            <span class="leaders">{leaders}</span>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
-    
+        <div class="option-text">{text}</div>
+        <div class="progress-container">
+            <div class="progress-bar" style="width:{progress}%"></div>
+        </div>
+        {f'<div class="full-badge">FULL</div>' if count >= max_limit else ''}
+    </div>
+    """,
+    unsafe_allow_html=True
+)
     col1, col2 = container.columns([1, 1])
     
     # Select button (only enabled if not disabled)
