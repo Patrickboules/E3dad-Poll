@@ -277,7 +277,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("📊 مشاريع اعداد 2025")
+st.title("📊E3dad Poll 2025")
 
 # Initialize session state with clearer structure
 
@@ -486,9 +486,9 @@ def main_form():
 
 </div>
 """, unsafe_allow_html=True)
-            st.markdown('<span class="required-field">اسم المخدوم رقم 1</span>', unsafe_allow_html=True)
+            st.markdown('<span class="required-field">اسمك</span>', unsafe_allow_html=True)
             st.session_state.form['first_name'] = st.text_input(
-                            "اسم المخدوم رقم 1", 
+                            "اسمك", 
                             value=st.session_state.form['first_name'],
                             key="first_name_input",
                             label_visibility="collapsed",
